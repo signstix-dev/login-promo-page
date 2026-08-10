@@ -186,6 +186,18 @@
       <div class="track" id="track">
 
         <div class="slide">
+          <p class="cat">Announcement</p>
+          <h2 class="heading">New <span>Website Live NOW!!!</span></h2>
+          <div class="media">
+            <div class="icon-circle">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="28" fill="#f26724" opacity="0.12"/><circle cx="32" cy="32" r="16" stroke="#f26724" stroke-width="3.5"/><ellipse cx="32" cy="32" rx="7" ry="16" stroke="#f26724" stroke-width="3.5"/><path d="M16 32h32" stroke="#f26724" stroke-width="3.5" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+          <p class="desc">We've launched a brand new website with a fresh look, easier navigation and updated resources. Take a look and let us know what you think.</p>
+          <a href="https://signstix.com/" target="_blank" class="btn">Visit Website →</a>
+        </div>
+
+        <div class="slide">
           <p class="cat">New APK Release</p>
           <h2 class="heading">SignStix <span>3.4.0</span></h2>
           <div class="media">
@@ -195,21 +207,6 @@
           </div>
           <p class="desc">Devices can be upgraded via the Devices page in Director. Stay up to date with the latest SignStix APK release.</p>
           <a href="https://signstix.com/new-releases/" target="_blank" class="btn">View Release →</a>
-        </div>
-
-        <div class="slide">
-          <p class="cat">Media Player</p>
-          <h2 class="heading">SignStix <span>X96</span></h2>
-          <div class="media">
-            <img
-              src="https://i.postimg.cc/y8TRZ2hH/X96-Device-No-background-2-768x768.png"
-              alt="SignStix X96"
-              width="175"
-              height="175"
-            />
-          </div>
-          <p class="desc">Our X96 Android Device is a compact media player that turns any screen into a digital signage device.</p>
-          <a href="https://signstix.com/digital-signage-solutions/signstix-android-media-device-x96/" target="_blank" class="btn">Learn More →</a>
         </div>
 
         <div class="slide">
@@ -255,7 +252,7 @@
       autoScroll = setInterval(() => {
         current = (current + 1) % btns.length;
         goTo(current);
-      }, 5000);
+      }, 3000);
     }
     function resetAutoScroll() {
       clearInterval(autoScroll);
