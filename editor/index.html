@@ -15,6 +15,7 @@
     --bg:#f3f1ec;
     --accent:#f26724;
     --accent-dark:#a83929;
+    --icon-bg:#f2cfc9;
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;}
@@ -94,6 +95,57 @@
   }
   .scroll-bar input[type="number"]:focus{ border-color:var(--accent); }
   .scroll-bar .unit{ font-size:11px; color:var(--sub); }
+
+  .color-bar{
+    padding:10px 28px;
+    background:#fbfaf8;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .color-bar label{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.03em;
+    color:var(--sub);
+    text-transform:uppercase;
+  }
+  .color-bar input[type="color"]{
+    width:32px;
+    height:32px;
+    padding:0;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:none;
+    cursor:pointer;
+  }
+  .color-bar input[type="text"]{
+    width:90px;
+    font-family:Montserrat, sans-serif;
+    font-size:12px;
+    padding:6px 8px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:#fff;
+    outline:none;
+    text-transform:lowercase;
+  }
+  .color-bar input[type="text"]:focus{ border-color:var(--accent); }
+  .color-bar input[type="text"].invalid{ border-color:#c0392b; }
+  .reset-color-btn{
+    font-family:Montserrat, sans-serif;
+    font-size:11px;
+    font-weight:700;
+    color:var(--sub);
+    background:none;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:6px 12px;
+    cursor:pointer;
+  }
+  .reset-color-btn:hover{ background:#eee; }
 
   main{
     flex:1;
@@ -333,7 +385,7 @@
   .heading .heading-plain{ color: var(--ink); }
   .media{ flex:1; min-height:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
   .media img{ width:175px; height:175px; object-fit:contain; display:block; flex-shrink:0; }
-  .icon-circle{ width:100px; height:100px; border-radius:50%; background:#f2cfc9; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .icon-circle{ width:100px; height:100px; border-radius:50%; background:var(--icon-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .icon-circle svg{ width:48px; height:48px; }
   .desc{ font-size:12px; color:#696969; line-height:1.6; flex-shrink:0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
   .btn{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; height:42px; border-radius:999px; background:var(--accent); color:#fff; font-family:Montserrat, sans-serif; font-size:13px; font-weight:700; letter-spacing:.05em; border:none; cursor:pointer; text-decoration:none; flex-shrink:0; }
@@ -365,6 +417,13 @@
   <label for="scrollSecondsInput">Auto-scroll every</label>
   <input type="number" id="scrollSecondsInput" min="1" max="30" step="0.5" value="3" />
   <span class="unit">seconds</span>
+</div>
+
+<div class="color-bar">
+  <label for="accentColorPicker">Accent colour</label>
+  <input type="color" id="accentColorPicker" value="#f26724" />
+  <input type="text" id="accentColorHex" value="#f26724" maxlength="7" spellcheck="false" />
+  <button type="button" id="resetColorBtn" class="reset-color-btn">Reset to default</button>
 </div>
 
 <div id="publishBar" style="display:none; padding:16px 28px; background:#fbfaf8; border-bottom:1px solid var(--line);">
@@ -410,27 +469,58 @@
 <script>
   const MIN_SLIDES = 1;
   const MAX_SLIDES = 8;
+  const DEFAULT_ACCENT = '#f26724';
 
-  const ICON_SVGS = [
-    // Globe icon
-    `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="28" fill="#f26724" opacity="0.12"/><circle cx="32" cy="32" r="16" stroke="#f26724" stroke-width="3.5"/><ellipse cx="32" cy="32" rx="7" ry="16" stroke="#f26724" stroke-width="3.5"/><path d="M16 32h32" stroke="#f26724" stroke-width="3.5" stroke-linecap="round"/></svg>`,
-    // Download/update icon
-    `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="28" fill="#f26724" opacity="0.12"/><path d="M32 14v22M32 36l-8-8M32 36l8-8" stroke="#f26724" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 46h28" stroke="#f26724" stroke-width="3.5" stroke-linecap="round"/></svg>`,
-    // Play icon
-    `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="28" fill="#f26724" opacity="0.12"/><polygon points="24,20 48,32 24,44" fill="#f26724" opacity="0.85"/></svg>`
+  // ---- Icon templates (take a colour, return SVG markup) ----
+  const ICON_TEMPLATES = [
+    (c) => `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="28" fill="${c}" opacity="0.12"/><circle cx="32" cy="32" r="16" stroke="${c}" stroke-width="3.5"/><ellipse cx="32" cy="32" rx="7" ry="16" stroke="${c}" stroke-width="3.5"/><path d="M16 32h32" stroke="${c}" stroke-width="3.5" stroke-linecap="round"/></svg>`,
+    (c) => `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="28" fill="${c}" opacity="0.12"/><path d="M32 14v22M32 36l-8-8M32 36l8-8" stroke="${c}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 46h28" stroke="${c}" stroke-width="3.5" stroke-linecap="round"/></svg>`,
+    (c) => `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="28" fill="${c}" opacity="0.12"/><polygon points="24,20 48,32 24,44" fill="${c}" opacity="0.85"/></svg>`
   ];
+
+  function getIconSvg(key){
+    return ICON_TEMPLATES[key](accentColor);
+  }
 
   const fieldIds = ['cat','head','headAccent','desc','img','btnText','btnLink'];
 
+  // ---- Colour helpers ----
+  function isValidHex(v){
+    return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v);
+  }
+  function normalizeHex(v){
+    v = v.trim();
+    if(!v.startsWith('#')) v = '#' + v;
+    if(v.length === 4){ v = '#' + v.slice(1).split('').map(ch => ch + ch).join(''); }
+    return v.toLowerCase();
+  }
+  function hexToRgb(hex){
+    hex = hex.replace('#','');
+    const num = parseInt(hex, 16);
+    return { r:(num>>16)&255, g:(num>>8)&255, b:num&255 };
+  }
+  function rgbToHex(r,g,b){
+    return '#' + [r,g,b].map(v => Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+  }
+  function mixWithWhite(hex, amount){
+    const {r,g,b} = hexToRgb(hex);
+    return rgbToHex(r+(255-r)*amount, g+(255-g)*amount, b+(255-b)*amount);
+  }
+  function mixWithBlack(hex, amount){
+    const {r,g,b} = hexToRgb(hex);
+    return rgbToHex(r*(1-amount), g*(1-amount), b*(1-amount));
+  }
+
   // ---- Data model ----
   let slides = [
-    { cat:'Announcement', head:'New', headAccent:'Website', desc:"We've launched a brand new website with a fresh look, easier navigation and updated resources. Take a look and let us know what you think.", img:'', btnText:'Visit Website', btnLink:'https://signstix.com/', icon: ICON_SVGS[0] },
-    { cat:'Media Player', head:'SignStix', headAccent:'X96', desc:'Our X96 Android Device is a compact media player that turns any screen into a digital signage device.', img:'https://i.postimg.cc/y8TRZ2hH/X96-Device-No-background-2-768x768.png', btnText:'Learn More', btnLink:'https://signstix.com/digital-signage-solutions/signstix-android-media-device-x96/', icon: ICON_SVGS[1] },
-    { cat:'New APK Release', head:'SignStix', headAccent:'3.4.0', desc:'Devices can be upgraded via the Devices page in Director. Stay up to date with the latest SignStix APK release.', img:'', btnText:'View Release', btnLink:'https://signstix.com/new-releases/', icon: ICON_SVGS[1] },
-    { cat:'Learn', head:'SignStix', headAccent:'Academy', desc:"Watch helpful tutorials and learn how to easily create engaging digital content on SignStix's digital signage platform.", img:'', btnText:'Watch Now', btnLink:'https://signstix.com/support/videos/', icon: ICON_SVGS[2] }
+    { cat:'Announcement', head:'New', headAccent:'Website', desc:"We've launched a brand new website with a fresh look, easier navigation and updated resources. Take a look and let us know what you think.", img:'', btnText:'Visit Website', btnLink:'https://signstix.com/', icon: 0 },
+    { cat:'Media Player', head:'SignStix', headAccent:'X96', desc:'Our X96 Android Device is a compact media player that turns any screen into a digital signage device.', img:'https://i.postimg.cc/y8TRZ2hH/X96-Device-No-background-2-768x768.png', btnText:'Learn More', btnLink:'https://signstix.com/digital-signage-solutions/signstix-android-media-device-x96/', icon: 1 },
+    { cat:'New APK Release', head:'SignStix', headAccent:'3.4.0', desc:'Devices can be upgraded via the Devices page in Director. Stay up to date with the latest SignStix APK release.', img:'', btnText:'View Release', btnLink:'https://signstix.com/new-releases/', icon: 1 },
+    { cat:'Learn', head:'SignStix', headAccent:'Academy', desc:"Watch helpful tutorials and learn how to easily create engaging digital content on SignStix's digital signage platform.", img:'', btnText:'Watch Now', btnLink:'https://signstix.com/support/videos/', icon: 2 }
   ];
   let activeSlide = 0;
   let scrollSeconds = 3;
+  let accentColor = DEFAULT_ACCENT;
 
   function newBlankSlide(){
     return {
@@ -441,7 +531,7 @@
       img: '',
       btnText: 'Learn More',
       btnLink: 'https://signstix.com/',
-      icon: ICON_SVGS[slides.length % ICON_SVGS.length]
+      icon: slides.length % ICON_TEMPLATES.length
     };
   }
 
@@ -548,8 +638,7 @@
     document.getElementById('tabs').innerHTML = tabsMarkup();
     document.getElementById('slideFormsContainer').innerHTML = slides.map((s,i)=>slideFormMarkup(s,i)).join('');
 
-    let addBtn = document.getElementById('addSlideBtn');
-    addBtn = document.createElement('button');
+    const addBtn = document.createElement('button');
     addBtn.id = 'addSlideBtn';
     addBtn.className = 'add-slide-btn';
     addBtn.type = 'button';
@@ -565,7 +654,7 @@
 
     track.style.width = (365 * slides.length) + 'px';
     track.innerHTML = slides.map((s, i) => {
-      const d = i < slides.length ? getSlideDataSafe(i) : s;
+      const d = getSlideDataSafe(i);
       return slideCardMarkup(d, i);
     }).join('');
 
@@ -576,8 +665,6 @@
     wireRadios();
   }
 
-  // Reads current DOM input values when available (form has been rendered),
-  // falling back to the underlying data if not.
   function getSlideDataSafe(i){
     const el = document.getElementById(`cat-${i}`);
     if(!el) return slides[i];
@@ -587,7 +674,7 @@
   function slideCardMarkup(d, i){
     const mediaHtml = d.img
       ? `<img src="${escapeAttr(d.img)}" alt="${escapeAttr(d.head + ' ' + d.headAccent)}" width="175" height="175" />`
-      : `<div class="icon-circle">${slides[i].icon}</div>`;
+      : `<div class="icon-circle">${getIconSvg(slides[i].icon)}</div>`;
     return `
       <div class="slide">
         <p class="cat">${escapeHtml(d.cat)}</p>
@@ -655,7 +742,7 @@
     resetPreviewAutoScroll();
   }
 
-  // ---- Event wiring (re-attached after every renderAll, since DOM is rebuilt) ----
+  // ---- Event wiring ----
   function wireTabEvents(){
     document.getElementById('tabs').addEventListener('click', (e)=>{
       const tabBtn = e.target.closest('.tab-btn');
@@ -754,6 +841,51 @@
     resetPreviewAutoScroll();
   });
 
+  // ---- Accent colour controls ----
+  const accentColorPicker = document.getElementById('accentColorPicker');
+  const accentColorHex = document.getElementById('accentColorHex');
+  const resetColorBtn = document.getElementById('resetColorBtn');
+
+  function applyAccentColor(){
+    document.documentElement.style.setProperty('--accent', accentColor);
+    document.documentElement.style.setProperty('--accent-dark', mixWithBlack(accentColor, 0.22));
+    document.documentElement.style.setProperty('--icon-bg', mixWithWhite(accentColor, 0.78));
+    accentColorPicker.value = accentColor;
+    accentColorHex.value = accentColor;
+    accentColorHex.classList.remove('invalid');
+    renderPreview();
+  }
+
+  accentColorPicker.addEventListener('input', ()=>{
+    accentColor = accentColorPicker.value;
+    applyAccentColor();
+  });
+
+  accentColorHex.addEventListener('input', ()=>{
+    const v = normalizeHex(accentColorHex.value);
+    if(isValidHex(v)){
+      accentColor = v;
+      document.documentElement.style.setProperty('--accent', accentColor);
+      document.documentElement.style.setProperty('--accent-dark', mixWithBlack(accentColor, 0.22));
+      document.documentElement.style.setProperty('--icon-bg', mixWithWhite(accentColor, 0.78));
+      accentColorPicker.value = accentColor;
+      accentColorHex.classList.remove('invalid');
+      renderPreview();
+    } else {
+      accentColorHex.classList.add('invalid');
+    }
+  });
+
+  accentColorHex.addEventListener('blur', ()=>{
+    accentColorHex.value = accentColor;
+    accentColorHex.classList.remove('invalid');
+  });
+
+  resetColorBtn.addEventListener('click', ()=>{
+    accentColor = DEFAULT_ACCENT;
+    applyAccentColor();
+  });
+
   // ---- Export ----
   function buildSlideMarkup(d, i){
     const mediaHtml = d.img
@@ -767,7 +899,7 @@
           </div>`
       : `          <div class="media">
             <div class="icon-circle">
-              ${slides[i].icon}
+              ${getIconSvg(slides[i].icon)}
             </div>
           </div>`;
 
@@ -786,6 +918,8 @@ ${mediaHtml}
     const slideMarkup = slides.map((s,i)=>buildSlideMarkup(getSlideDataSafe(i), i)).join('\n\n');
     const dotsMarkup = slides.map((s,i)=>`      <button${i===0 ? ' class="active"' : ''} data-index="${i}" aria-label="Slide ${i+1}"></button>`).join('\n');
     const intervalMs = Math.round(scrollSeconds * 1000);
+    const accentDark = mixWithBlack(accentColor, 0.22);
+    const iconBg = mixWithWhite(accentColor, 0.78);
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -858,7 +992,7 @@ ${mediaHtml}
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #f26724;
+      color: ${accentColor};
       flex-shrink: 0;
     }
 
@@ -870,7 +1004,7 @@ ${mediaHtml}
       flex-shrink: 0;
     }
 
-    .heading span { color: #f26724; }
+    .heading span { color: ${accentColor}; }
 
     .media {
       flex: 1;
@@ -894,7 +1028,7 @@ ${mediaHtml}
       width: 100px;
       height: 100px;
       border-radius: 50%;
-      background: #f2cfc9;
+      background: ${iconBg};
       display: flex;
       align-items: center;
       justify-content: center;
@@ -925,7 +1059,7 @@ ${mediaHtml}
       width: 100%;
       height: 42px;
       border-radius: 999px;
-      background: #f26724;
+      background: ${accentColor};
       color: #fff;
       font-family: Montserrat, sans-serif;
       font-size: 13px;
@@ -938,7 +1072,7 @@ ${mediaHtml}
       flex-shrink: 0;
     }
 
-    .btn:hover { background: #a83929; }
+    .btn:hover { background: ${accentDark}; }
     .btn:active { transform: scale(0.98); }
 
     .radio-row {
@@ -963,7 +1097,7 @@ ${mediaHtml}
     }
 
     .radio-row button.active {
-      background: #f26724;
+      background: ${accentColor};
       transform: scale(1.3);
     }
   </style>
