@@ -746,16 +746,16 @@ function cardCSS() {
     /* APK RELEASE: screen + update bar */
     '.apknet{left:50%;top:50%;width:280px;height:150px;margin:-75px 0 0 -140px}',
     '.apknet .line{position:absolute;left:40px;right:40px;top:18px;height:2px;background:repeating-linear-gradient(90deg,rgba(59,108,129,.35) 0 5px,transparent 5px 10px)}',
-    '.apknet .hub{position:absolute;left:50%;top:0;width:38px;height:38px;margin-left:-19px;border-radius:50%;background:linear-gradient(140deg,#FF8A3D,#FF5E00);display:grid;place-items:center;box-shadow:0 8px 14px -6px rgba(255,94,0,.6)}',
+    '.apknet .hub{position:absolute;left:50%;top:0;width:38px;height:38px;margin-left:-19px;border-radius:50%;background:linear-gradient(140deg,var(--na,#FF8A3D),var(--nb,#FF5E00));display:grid;place-items:center;box-shadow:0 8px 14px -6px color-mix(in srgb,var(--nb,#FF5E00) 60%,transparent)}',
     '.apknet .hub svg{width:18px;height:18px}',
     '.apknet .drop{position:absolute;top:19px;width:2px;height:46px;margin-left:-1px;background:repeating-linear-gradient(180deg,rgba(59,108,129,.35) 0 4px,transparent 4px 8px)}',
-    '.apknet .pkt{position:absolute;top:14px;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:#FF5E00;box-shadow:0 0 0 3px rgba(255,94,0,.2);opacity:0}',
+    '.apknet .pkt{position:absolute;top:14px;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:var(--nb,#FF5E00);box-shadow:0 0 0 3px color-mix(in srgb,var(--nb,#FF5E00) 22%,transparent);opacity:0}',
     '.apknet .ns{position:absolute;top:66px;width:80px;height:50px;border-radius:8px;background:linear-gradient(160deg,#fff,#EFF5F8);border:1.5px solid rgba(10,54,75,.18);box-shadow:0 12px 22px -14px rgba(10,54,75,.45);overflow:hidden}',
     '.apknet .ns .in{position:absolute;inset:4px;border-radius:4px;background:linear-gradient(135deg,#FFF1E8,#FFE9E6 45%,#E3EFF5);overflow:hidden}',
-    '.apknet .ns .fill{position:absolute;inset:0;background:linear-gradient(140deg,#FF8A3D,#FF5E00);transform-origin:50% 100%;transform:scaleY(0)}',
+    '.apknet .ns .fill{position:absolute;inset:0;background:linear-gradient(140deg,var(--na,#FF8A3D),var(--nb,#FF5E00));transform-origin:50% 100%;transform:scaleY(0)}',
     '.apknet .ns .ok{position:absolute;inset:0;display:grid;place-items:center;opacity:0}',
     '.apknet .ns .ok svg{width:18px;height:18px}',
-    '.apknet .lab{position:absolute;top:122px;width:80px;text-align:center;font:700 9.5px Poppins,sans-serif;color:#FF5E00;opacity:0}',
+    '.apknet .lab{position:absolute;top:122px;width:80px;text-align:center;font:700 9.5px Poppins,sans-serif;color:var(--nb,#FF5E00);opacity:0}',
     '.apknet .s1{left:0}.apknet .s2{left:100px}.apknet .s3{left:200px}',
     '.slide.on .apknet .hub{animation:ss-nhub 4.8s ease-in-out infinite}',
     '.slide.on .apknet .pkt{animation:ss-npkt 4.8s ease-in infinite}',
@@ -923,12 +923,14 @@ function ssSlide(s, i, base, editing) {
   var r = [0, 2, 3, 5, 1][i % 5], c = P.slice(r).concat(P.slice(0, r));   // never lead with yellow (too pale for text)
   var ICONS = ssIcons('#fff');
   var ver = (String(s.title || '').match(/\d+(?:\.\d+)+/) || [''])[0];
+  var NETC = { sunrise: ['Sunrise', '#FF8A3D', '#FF5E00'], warm: ['Warm', '#FF7A6E', '#FE3434'], dusk: ['Dusk', '#FF9A8F', '#FF6159'], winter: ['Winter blue', '#5E9BB5', '#3B6C81'], night: ['Dark Night', '#3B6C81', '#0A364B'], teal: ['Teal', '#3FD1BE', '#0E9384'], purple: ['Purple', '#A78BFA', '#7C3AED'], pink: ['Pink', '#FF8AB8', '#E6397F'] };
+  var nc = NETC[s.netc] || NETC.sunrise;
   var MOTIF = {
     feature: '<i class="shape orbit o2"><b></b><b></b><b></b></i><i class="shape orbit o1"><b></b></i>',
     learn:   '<i class="shape deck"><span class="ls l1"></span><span class="ls l2"></span></i><i class="shape timeline"><span class="rail"></span><span class="fill"></span><span class="head"></span></i>',
     season: '',
     idea: '<i class="shape spark"><svg viewBox="0 0 170 170" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sscg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB0AA"/><stop offset="1" stop-color="#FFA060"/></linearGradient></defs><ellipse cx="85" cy="150" rx="30" ry="5" fill="#00243e" opacity=".08"/><g class="sbulb"><path d="M85 40a30 30 0 0 0-19 53c3.8 3.4 5.6 7.4 5.6 12h26.8c0-4.6 1.8-8.6 5.6-12A30 30 0 0 0 85 40z" fill="url(#sscg)"/><path d="M71 56a16 16 0 0 1 9-6" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".9"/><rect x="72" y="110" width="26" height="7" rx="3.5" fill="#0A364B"/><rect x="75" y="120" width="20" height="7" rx="3.5" fill="#0A364B"/></g><g stroke-width="4" stroke-linecap="round" fill="none"><path class="sp" d="M85 24V10" stroke="#FFC23C" stroke-dasharray="14 14"/><path class="sp" d="M118 36l9-11" stroke="#FFD978" stroke-dasharray="14 14"/><path class="sp" d="M52 36l-9-11" stroke="#FFD978" stroke-dasharray="14 14"/><path class="sp" d="M128 66h14" stroke="#FFC23C" stroke-dasharray="14 14"/><path class="sp" d="M42 66H28" stroke="#FFC23C" stroke-dasharray="14 14"/></g></svg></i>',
-    release: '<i class="shape apknet"><span class="line"></span><span class="drop" style="left:40px"></span><span class="drop" style="left:140px"></span><span class="drop" style="left:240px"></span><span class="pkt d1" style="left:40px"></span><span class="pkt d2" style="left:140px"></span><span class="pkt d3" style="left:240px"></span><span class="hub"><svg viewBox="0 0 16 16"><path d="M8 13V3.5M3.8 7.5 8 3.3l4.2 4.2" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span class="ns s1 d1"><span class="in"><span class="fill"></span><span class="ok"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span></span></span><span class="ns s2 d2"><span class="in"><span class="fill"></span><span class="ok"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span></span></span><span class="ns s3 d3"><span class="in"><span class="fill"></span><span class="ok"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span></span></span>' + (ver ? '<span class="lab s1 d1">' + ver + '</span><span class="lab s2 d2">' + ver + '</span><span class="lab s3 d3">' + ver + '</span>' : '') + '</i>'
+    release: '<i class="shape apknet"><span class="line"></span><span class="drop" style="left:40px"></span><span class="drop" style="left:140px"></span><span class="drop" style="left:240px"></span><span class="pkt d1" style="left:40px"></span><span class="pkt d2" style="left:140px"></span><span class="pkt d3" style="left:240px"></span><span class="hub"><svg viewBox="0 0 16 16"><path d="M8 13V3.5M3.8 7.5 8 3.3l4.2 4.2" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><span class="ns s1 d1"><span class="in"><span class="fill"></span><span class="ok"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span></span></span><span class="ns s2 d2"><span class="in"><span class="fill"></span><span class="ok"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span></span></span><span class="ns s3 d3"><span class="in"><span class="fill"></span><span class="ok"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span></span></span>' + (ver || editing ? '<span class="lab s1 d1">' + ver + '</span><span class="lab s2 d2">' + ver + '</span><span class="lab s3 d3">' + ver + '</span>' : '') + '</i>'
   };
   function esc(x) { return String(x || '').replace(/[&<>"']/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]; }); }
   var src = /^(https?:|data:|blob:)/.test(s.image || '') ? s.image : (base || '') + s.image;
@@ -968,7 +970,7 @@ function ssSlide(s, i, base, editing) {
     kind: kind + (!editing && !has(s.text) ? ' no-desc' : '') + (!editing && !has(s.button) ? ' no-btn' : ''),
     vars: c.map(function (x, k) { return '--c' + (k + 1) + ':' + x; }).join(';') +
           Object.keys(s.colors || {}).map(function (k) { var v = s.colors[k]; return /^#[0-9a-f]{3,8}$/i.test(v || '') && /^[a-zA-Z]+$/.test(k) ? ';--t-' + k + ':' + v : ''; }).join('') +
-          Object.keys(s.align || {}).map(function (k) { var v = s.align[k]; return /^(left|center|right)$/.test(v || '') && /^[a-zA-Z]+$/.test(k) ? ';--a-' + k + ':' + v : ''; }).join('') + tile,
+          Object.keys(s.align || {}).map(function (k) { var v = s.align[k]; return /^(left|center|right)$/.test(v || '') && /^[a-zA-Z]+$/.test(k) ? ';--a-' + k + ':' + v : ''; }).join('') + tile + ';--na:' + nc[1] + ';--nb:' + nc[2],
     // empty parts are left out of the live page (the editor keeps them so you can type in them)
     html: (editing || has(s.label) ? '<p class="cat">' + esc(s.label) + '</p>' : '') +
           (editing || has(s.title) ? '<h2 class="heading">' + esc(s.title).replace(/\*([^*]+)\*/g, '<span>$1</span>') + '</h2>' : '') +
@@ -1041,6 +1043,7 @@ function guessType(s) {
   if (/autumn|seasonal|winter|christmas|spring|summer|halloween|valentine/.test(t)) return 'season';
   return 'feature';
 }
+var NET_COLORS = { sunrise: ['Sunrise', '#FF8A3D', '#FF5E00'], warm: ['Warm', '#FF7A6E', '#FE3434'], dusk: ['Dusk', '#FF9A8F', '#FF6159'], winter: ['Winter blue', '#5E9BB5', '#3B6C81'], night: ['Dark Night', '#3B6C81', '#0A364B'], teal: ['Teal', '#3FD1BE', '#0E9384'], purple: ['Purple', '#A78BFA', '#7C3AED'], pink: ['Pink', '#FF8AB8', '#E6397F'] };
 var SEASON_LIST = [{ id: 'autumn', name: 'Autumn' }, { id: 'winter', name: 'Winter' }, { id: 'christmas', name: 'Christmas tree' }, { id: 'advent', name: 'Advent calendar' }, { id: 'gifts', name: 'Presents' }, { id: 'santa', name: 'Father Christmas' }, { id: 'spring', name: 'Spring' }, { id: 'summer', name: 'Summer' }, { id: 'halloween', name: 'Halloween' }, { id: 'bonfire', name: 'Bonfire Night' }, { id: 'remembrance', name: 'Remembrance' }, { id: 'valentine', name: 'Valentine’s' }];
 var TILE_PRESETS = [
   { id: '', name: 'Automatic (changes with each slide)', a: '', b: '' },
@@ -1072,6 +1075,7 @@ function cleanSlide(s) {
   var c = s.colors || {};
   TEXT_PARTS.forEach(function (t) { if (/^#[0-9a-f]{3,8}$/i.test(c[t.id] || '')) o.colors[t.id] = c[t.id].toLowerCase(); });
   if (TILE_PRESETS.some(function (t) { return t.id === s.tile; })) o.tile = s.tile;
+  if (NET_COLORS[s.netc] && s.netc !== 'sunrise') o.netc = s.netc;
   ['from', 'until'].forEach(function (k) { if (/^\d{4}-\d{2}-\d{2}$/.test(s[k] || '')) o[k] = s[k]; });
   o.align = {};
   ['label', 'heading', 'text'].forEach(function (k) { var v = (s.align || {})[k]; if (v === 'center' || v === 'right') o.align[k] = v; });
@@ -1152,9 +1156,34 @@ function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
 function ssGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
 function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
 
+function patchVersion() {
+  var cur = state.slides[sel]; if (!cur || cur.type !== 'release') return;
+  var v = (String(cur.title || '').match(/\d+(?:\.\d+)+/) || [''])[0];
+  Array.prototype.forEach.call(document.querySelectorAll('#edSlide .apknet .lab'), function (l) { l.textContent = v; });
+  var nv = $('netVer'); if (nv) nv.textContent = v || 'no number found';
+}
+// when you finish editing an APK heading, the old version number in the description is swapped for the new one
+var headVer = null;
+function verOf(t) { return (String(t || '').match(/\d+(?:\.\d+)+/) || [''])[0]; }
+document.addEventListener('focusin', function (e) {
+  if (e.target.closest && e.target.closest('#edSlide .heading')) { var cur = state.slides[sel]; headVer = cur && cur.type === 'release' ? verOf(cur.title) : null; }
+});
+document.addEventListener('focusout', function (e) {
+  if (!(e.target.closest && e.target.closest('#edSlide .heading')) || !headVer) return;
+  var cur = state.slides[sel], oldV = headVer; headVer = null;
+  if (!cur || cur.type !== 'release') return;
+  var v = verOf(cur.title);
+  if (!v || v === oldV || String(cur.text || '').indexOf(oldV) < 0) return;
+  cur.text = cur.text.split(oldV).join(v);
+  var d = document.querySelector('#edSlide .desc');
+  if (d) { var w = document.createTreeWalker(d, NodeFilter.SHOW_TEXT), n; while ((n = w.nextNode())) if (n.nodeValue.indexOf(oldV) > -1) n.nodeValue = n.nodeValue.split(oldV).join(v); }
+  changed();
+  toast('Updated ' + oldV + ' to ' + v + ' in the description too');
+});
 function changed() {
   saveDraft();
   patchStrip();
+  patchVersion();
   renderStatus();
   checkOverflow();
 }
@@ -1493,7 +1522,7 @@ function renderSide() {
       '<label class="ui-field">…or paste a link to an image<input type="url" id="imgUrl" placeholder="https://…" value="' + (/^https?:/.test(s.image) ? esc(s.image) : '') + '"></label>' +
       (s.image && mode === 'image' ? '<p style="margin-top:10px"><button class="ui-link" type="button" id="imgRemove">Remove image and use an icon</button></p>' : '') +
     '</div>' +
-    '</div>' + (s.type === 'release' ? '<p class="ui-help" style="margin-top:14px">APK release slides show the update travelling out to three screens instead of a picture. The version number under each screen comes from the heading.</p>' : '') +
+    '</div>' + (s.type === 'release' ? '<h2>Animation colour</h2><div class="ui-tiles">' + Object.keys(NET_COLORS).map(function (k) { var x = NET_COLORS[k]; return '<button type="button" data-netc="' + k + '" title="' + x[0] + '" class="' + ((s.netc || 'sunrise') === k ? 'on' : '') + '" style="background:linear-gradient(140deg,' + x[1] + ',' + x[2] + ')"></button>'; }).join('') + '</div>' + '<p class="ui-help" style="margin-top:10px">Pick a new colour for each player release so it stands out. The version number under each screen comes from the heading automatically (<span id="netVer">' + esc((String(s.title || '').match(/\d+(?:\.\d+)+/) || ['no number found'])[0]) + '</span>).</p>' : '') +
     (s.type === 'idea' ? '<p class="ui-help" style="margin-top:14px">Good idea slides show an orange light bulb with sparks instead of a picture.</p>' : '') +
     (s.type === 'season' ? '<h2>Season</h2><div class="ui-seasons">' + SEASON_LIST.map(function (x) {
       return '<button type="button" data-season="' + x.id + '" class="' + ((s.season || 'autumn') === x.id ? 'on' : '') + '">' + x.name + '</button>';
@@ -1545,6 +1574,9 @@ function renderSide() {
   });
   Array.prototype.forEach.call(side.querySelectorAll('[data-season]'), function (b) {
     b.onclick = function () { s.season = b.dataset.season; renderCard(); renderSide(); changed(); };
+  });
+  Array.prototype.forEach.call(side.querySelectorAll('[data-netc]'), function (b) {
+    b.onclick = function () { s.netc = b.dataset.netc; renderCard(); renderSide(); changed(); };
   });
   Array.prototype.forEach.call(side.querySelectorAll('[data-tile]'), function (b) {
     b.onclick = function () { if (b.dataset.tile) s.tile = b.dataset.tile; else delete s.tile; renderCard(); renderSide(); changed(); };
