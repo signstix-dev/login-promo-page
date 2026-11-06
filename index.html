@@ -68,16 +68,16 @@ html,body{width:365px;height:446px;overflow:hidden;background:transparent;font-f
 .kind-learn .pic{max-width:100px;max-height:72px;margin-top:-26px}
 .apknet{left:50%;top:50%;width:280px;height:150px;margin:-75px 0 0 -140px}
 .apknet .line{position:absolute;left:40px;right:40px;top:18px;height:2px;background:repeating-linear-gradient(90deg,rgba(59,108,129,.35) 0 5px,transparent 5px 10px)}
-.apknet .hub{position:absolute;left:50%;top:0;width:38px;height:38px;margin-left:-19px;border-radius:50%;background:linear-gradient(140deg,var(--na,#FF8A3D),var(--nb,#FF5E00));display:grid;place-items:center;box-shadow:0 8px 14px -6px color-mix(in srgb,var(--nb,#FF5E00) 60%,transparent)}
+.apknet .hub{position:absolute;left:50%;top:0;width:38px;height:38px;margin-left:-19px;border-radius:50%;background:linear-gradient(135deg,var(--na,#FFD3B5) 0%,var(--nb,#FFAA78) 45%,var(--nt,#F07A3A) 100%);display:grid;place-items:center;box-shadow:0 8px 14px -6px color-mix(in srgb,var(--nb,#FF5E00) 60%,transparent)}
 .apknet .hub svg{width:18px;height:18px}
 .apknet .drop{position:absolute;top:19px;width:2px;height:46px;margin-left:-1px;background:repeating-linear-gradient(180deg,rgba(59,108,129,.35) 0 4px,transparent 4px 8px)}
 .apknet .pkt{position:absolute;top:14px;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:var(--nb,#FF5E00);box-shadow:0 0 0 3px color-mix(in srgb,var(--nb,#FF5E00) 22%,transparent);opacity:0}
 .apknet .ns{position:absolute;top:66px;width:80px;height:50px;border-radius:8px;background:linear-gradient(160deg,#fff,#EFF5F8);border:1.5px solid rgba(10,54,75,.18);box-shadow:0 12px 22px -14px rgba(10,54,75,.45);overflow:hidden}
 .apknet .ns .in{position:absolute;inset:4px;border-radius:4px;background:linear-gradient(135deg,#FFF1E8,#FFE9E6 45%,#E3EFF5);overflow:hidden}
-.apknet .ns .fill{position:absolute;inset:0;background:linear-gradient(140deg,var(--na,#FF8A3D),var(--nb,#FF5E00));transform-origin:50% 100%;transform:scaleY(0)}
+.apknet .ns .fill{position:absolute;inset:0;background:linear-gradient(135deg,var(--na,#FFD3B5) 0%,var(--nb,#FFAA78) 45%,var(--nt,#F07A3A) 100%);transform-origin:50% 100%;transform:scaleY(0)}
 .apknet .ns .ok{position:absolute;inset:0;display:grid;place-items:center;opacity:0}
 .apknet .ns .ok svg{width:18px;height:18px}
-.apknet .lab{position:absolute;top:122px;width:80px;text-align:center;font:700 9.5px Poppins,sans-serif;color:var(--nb,#FF5E00);opacity:0}
+.apknet .lab{position:absolute;top:122px;width:80px;text-align:center;font:700 9.5px Poppins,sans-serif;color:var(--nt,#F07A3A);opacity:0}
 .apknet .s1{left:0}.apknet .s2{left:100px}.apknet .s3{left:200px}
 .slide.on .apknet .hub{animation:ss-nhub 4.8s ease-in-out infinite}
 .slide.on .apknet .pkt{animation:ss-npkt 4.8s ease-in infinite}
@@ -250,24 +250,24 @@ html,body{width:365px;height:446px;overflow:hidden;background:transparent;font-f
   "random": true,
   "slides": [
     {
-      "type": "season",
+      "type": "feature",
       "label": "",
       "title": "*Bonfire night* this week",
       "text": "**Sparkling displays begin with SignStix**",
       "button": "",
       "link": "https://signstix.com/",
       "image": "",
-      "icon": "none",
+      "icon": "calendar",
       "hidden": false,
       "colors": {},
-      "from": "2026-11-03",
-      "until": "2026-11-05",
+      "tile": "teal",
+      "from": "2027-11-03",
+      "until": "2027-11-05",
       "align": {
         "label": "center",
         "heading": "center",
         "text": "center"
-      },
-      "season": "bonfire"
+      }
     },
     {
       "type": "season",
@@ -324,12 +324,11 @@ html,body{width:365px;height:446px;overflow:hidden;background:transparent;font-f
       "title": "SignStix *3.4.2*",
       "text": "**To get the latest features, upgrade your android screens remotely to 3.4.2 in the Devices page.**",
       "button": "View Release Notes",
-      "link": "https://www.signstix.com/latest-app-release-3-4-2",
+      "link": "https://www.signstix.com/release-notes",
       "image": "",
       "icon": "download",
       "hidden": false,
       "colors": {},
-      "netc": "dusk",
       "align": {
         "text": "center"
       }
@@ -639,8 +638,8 @@ function ssSlide(s, i, base, editing) {
   var r = [0, 2, 3, 5, 1][i % 5], c = P.slice(r).concat(P.slice(0, r));   // never lead with yellow (too pale for text)
   var ICONS = ssIcons('#fff');
   var ver = (String(s.title || '').match(/\d+(?:\.\d+)+/) || [''])[0];
-  var NETC = { sunrise: ['Sunrise', '#FF8A3D', '#FF5E00'], warm: ['Warm', '#FF7A6E', '#FE3434'], dusk: ['Dusk', '#FF9A8F', '#FF6159'], winter: ['Winter blue', '#5E9BB5', '#3B6C81'], night: ['Dark Night', '#3B6C81', '#0A364B'], teal: ['Teal', '#3FD1BE', '#0E9384'], purple: ['Purple', '#A78BFA', '#7C3AED'], pink: ['Pink', '#FF8AB8', '#E6397F'] };
-  var nc = NETC[s.netc] || NETC.sunrise;
+  var NETC = { peach: ['Peach', '#FFD3B5', '#FFAA78', '#F07A3A'], coral: ['Coral', '#FFC4BE', '#FF9289', '#EE5F55'], rose: ['Rose', '#FFCADB', '#F7A1BE', '#DB5F8C'], lemon: ['Lemon', '#FFEDB8', '#FFD66E', '#D49A12'], mint: ['Mint', '#C6F0E3', '#8EDCC6', '#25A27F'], sky: ['Sky', '#C8E8F5', '#94CBE2', '#3A90B4'], lavender: ['Lavender', '#DED3FF', '#B9A5F7', '#7D60DB'], winter: ['Winter blue', '#D0E1E9', '#A2C1CF', '#3B6C81'] };
+  var nc = NETC[s.netc] || NETC.peach;
   var MOTIF = {
     feature: '<i class="shape orbit o2"><b></b><b></b><b></b></i><i class="shape orbit o1"><b></b></i>',
     learn:   '<i class="shape deck"><span class="ls l1"></span><span class="ls l2"></span></i><i class="shape timeline"><span class="rail"></span><span class="fill"></span><span class="head"></span></i>',
@@ -686,7 +685,7 @@ function ssSlide(s, i, base, editing) {
     kind: kind + (!editing && !has(s.text) ? ' no-desc' : '') + (!editing && !has(s.button) ? ' no-btn' : ''),
     vars: c.map(function (x, k) { return '--c' + (k + 1) + ':' + x; }).join(';') +
           Object.keys(s.colors || {}).map(function (k) { var v = s.colors[k]; return /^#[0-9a-f]{3,8}$/i.test(v || '') && /^[a-zA-Z]+$/.test(k) ? ';--t-' + k + ':' + v : ''; }).join('') +
-          Object.keys(s.align || {}).map(function (k) { var v = s.align[k]; return /^(left|center|right)$/.test(v || '') && /^[a-zA-Z]+$/.test(k) ? ';--a-' + k + ':' + v : ''; }).join('') + tile + ';--na:' + nc[1] + ';--nb:' + nc[2],
+          Object.keys(s.align || {}).map(function (k) { var v = s.align[k]; return /^(left|center|right)$/.test(v || '') && /^[a-zA-Z]+$/.test(k) ? ';--a-' + k + ':' + v : ''; }).join('') + tile + (kind === 'release' ? ';--na:' + nc[1] + ';--nb:' + nc[2] + ';--nt:' + nc[3] + (s.colors && s.colors.highlight ? '' : ';--t-highlight:' + nc[3]) : ''),
     // empty parts are left out of the live page (the editor keeps them so you can type in them)
     html: (editing || has(s.label) ? '<p class="cat">' + esc(s.label) + '</p>' : '') +
           (editing || has(s.title) ? '<h2 class="heading">' + esc(s.title).replace(/\*([^*]+)\*/g, '<span>$1</span>') + '</h2>' : '') +
