@@ -349,6 +349,7 @@ html,body{width:365px;height:446px;overflow:hidden;background:transparent;font-f
 .slide.on .seas .wgB .d2,.slide.on .seas .wgB .d2 .cur{animation-delay:1.6s}.slide.on .seas .wgB .d3,.slide.on .seas .wgB .d3 .cur{animation-delay:3.2s}.slide.on .seas .wgB .d4,.slide.on .seas .wgB .d4 .cur{animation-delay:4.8s}.slide.on .seas .wgB .d5,.slide.on .seas .wgB .d5 .cur{animation-delay:6.4s}
 @keyframes wg-drag{0%{opacity:0;transform:translate(150px,-40px) rotate(6deg) scale(.9)}4%{opacity:1}13%{transform:translate(0,0) rotate(0) scale(1.05)}16%{transform:scale(.97)}19%,86%{opacity:1;transform:none}94%,100%{opacity:0;transform:none}}
 @keyframes wg-cur{0%,2%{opacity:0}5%,15%{opacity:1}22%,100%{opacity:0}}
+.slide.on .seas .wg .wx .wroll,.slide.on .seas .wg .wx .troll,.slide.on .seas .wg .wx .croll,.slide.on .seas .wg .ck .kroll,.slide.on .seas .wg .ai .lg span,.slide.on .seas .wg .ai .ws span,.slide.on .seas .wg .mh,.slide.on .seas .wg .hh{animation-delay:var(--wgoff,0s)}
 .seas .moon{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px}
 .seas .moon svg{display:block;width:100%;height:100%}
 .seas .moon .mglow{transform-box:view-box;transform-origin:70px 70px}
@@ -423,7 +424,7 @@ html,body{width:365px;height:446px;overflow:hidden;background:transparent;font-f
       "title": "How are *we doing?*",
       "text": "**Please spend 5 minutes completing our survey and help make SignStix the best.**",
       "button": "Take the survey",
-      "link": "https://signstix.com/",
+      "link": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=SyByoEHBkEKro3H6_u4__ST1JFJw3-ZDsS5g9yS-gVJUQk5FTFUxVDhTS1JLUzlaWFNVMTRGUjE3Ny4u",
       "image": "",
       "icon": "star",
       "hidden": false,
@@ -969,6 +970,9 @@ function ssWidgetTime() {
   document.head.appendChild(st);   // keep it last so it wins over the built-in times
   st.textContent = kf('wg-hh', function (t) { return (t[0] % 12 + t[1] / 60) * 30; }) + kf('wg-mh', function (t) { return t[1] * 6; });
 }
+function ssWidgetStart(root) {
+  Array.prototype.forEach.call((root || document).querySelectorAll('.wg'), function (w) { w.style.setProperty('--wgoff', -(Math.floor(Math.random() * 18) * 3) + 's'); });
+}
 (function liveRuntime() {
   var DATA = JSON.parse(document.getElementById('slides-data').textContent);
   var d0 = new Date(), today = d0.getFullYear() + '-' + ('0' + (d0.getMonth() + 1)).slice(-2) + '-' + ('0' + d0.getDate()).slice(-2);
@@ -1003,6 +1007,7 @@ function ssWidgetTime() {
     track.style.transform = 'translateX(' + (-365 * cur) + 'px)';
     for (var j = 0; j < radios.children.length; j++) radios.children[j].classList.toggle('active', j === cur);
     for (var k = 0; k < track.children.length; k++) {
+      if (k === cur && !track.children[k].classList.contains('on')) ssWidgetStart(track.children[k]);
       track.children[k].classList.toggle('on', k === cur);
       track.children[k].setAttribute('aria-hidden', k !== cur);
       var a = track.children[k].querySelector('a'); if (a) a.tabIndex = k === cur ? 0 : -1;
