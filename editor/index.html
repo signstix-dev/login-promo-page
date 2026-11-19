@@ -1541,7 +1541,8 @@ var $ = function (id) { return document.getElementById(id); };
 function esc(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 function snap() { return JSON.stringify({ seconds: state.seconds, random: state.random !== false, slides: state.slides.map(cleanSlide) }); }
 function cur() { return state.slides[sel]; }
-function imgSrc(u) { return /^(https?:|data:|blob:)/.test(u) ? u : '../' + u; }
+// newly published pictures can take a minute or two to appear on the website, so the editor shows them straight from GitHub
+function imgSrc(u) { return /^(https?:|data:|blob:)/.test(u) ? u : (PRACTICE ? '../' + u : 'https://raw.githubusercontent.com/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/' + GITHUB_BRANCH + '/' + u); }
 function plainTitle(t) { return (t || '').replace(/\*/g, ''); }
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
@@ -1722,7 +1723,7 @@ function renderCard() {
   }
   // colours follow the slide's position among the slides that will show
   var pos = state.slides.filter(function (x, k) { return k < sel && !x.hidden; }).length;
-  var m = ssSlide(s, pos, '../', true);
+  var m = ssSlide(s, pos, imgSrc(''), true);
   var dots = state.slides.map(function (x, i) {
     return '<button type="button" class="' + (i === sel ? 'active' : '') + '" data-dot="' + i + '" aria-label="Slide ' + (i + 1) + '"' + (x.hidden ? ' style="opacity:.35"' : '') + '></button>';
   }).join('');
