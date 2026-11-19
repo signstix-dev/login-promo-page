@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -800,6 +799,8 @@ function cardCSS() {
     '.kind-season .ic,.kind-season .pic,.kind-season .ph{display:none!important}',
     '.kind-season .media{flex-basis:175px}',
     '.kind-plain .media{display:none}',
+    '.kind-still .media,.kind-still .media *{animation:none!important}',
+    '.kind-still .media{flex-grow:1}',
     '.kind-plain .heading{margin-top:auto;font-size:30px}',
     '.kind-plain .desc{margin-block:6px auto;font-size:13.5px;-webkit-line-clamp:6}',
     '.seas{left:-28px;right:-28px;top:0;bottom:0;overflow:hidden}',
@@ -1299,7 +1300,8 @@ function ssSlide(s, i, base, editing) {
   MOTIF.season = SCENES[s.season] || SCENES.autumn;
   var kind = MOTIF[s.type] ? s.type : 'feature';
   if (!s._anim && !s.image && s.icon === 'lightbulb' && kind !== 'release') kind = 'idea';
-  if (s.anim === 'none') { MOTIF.plain = ''; kind = 'plain'; }   // text only, no animation or picture
+  // no animation: show the picture still if there is one, otherwise text only
+  if (s.anim === 'none') { MOTIF.plain = ''; MOTIF.still = ''; kind = (s.image || ICONS[s.icon]) ? 'still' : 'plain'; }
   var arrow = '<span class="arr"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>';
   var btn = (has(s.button) || editing)
     ? (editing ? '<div class="btn">' : '<a class="btn" href="' + esc(s.link || '#') + '" target="_blank" rel="noopener">') +
@@ -1901,7 +1903,7 @@ function renderSide() {
     '<div class="ui-types">' + TYPES.map(function (t) {
       return '<button type="button" data-type="' + t.id + '" class="' + (s.type === t.id ? 'on' : '') + '"><b>' + t.name + '</b><span>' + t.hint + '</span></button>';
     }).join('') + '</div>' +
-    '<div id="picBlock"' + (et === 'release' || et === 'idea' || et === 'season' || et === 'none' ? ' hidden' : '') + '><h2>Picture</h2>' +
+    '<div id="picBlock"' + (et === 'release' || et === 'idea' || et === 'season' ? ' hidden' : '') + '><h2>Picture</h2>' +
     '<div class="ui-seg"><button type="button" data-mode="icon" class="' + (mode === 'icon' ? 'on' : '') + '">Icon</button>' +
     '<button type="button" data-mode="art" class="' + (mode === 'art' ? 'on' : '') + '">Illustration</button>' +
     '<button type="button" data-mode="image" class="' + (mode === 'image' ? 'on' : '') + '">Your image</button></div>' +
@@ -1925,7 +1927,7 @@ function renderSide() {
       return '<button type="button" data-anim="' + x.id + '" class="' + (ea === x.id ? 'on' : '') + '">' + x.name + '</button>';
     }).join('') + '</div><p class="ui-sub" style="margin-top:10px">Seasonal</p><div class="ui-seasons">' + SEASON_LIST.map(function (x) {
       return '<button type="button" data-anim="season:' + x.id + '" class="' + (ea === 'season:' + x.id ? 'on' : '') + '">' + x.name + '</button>';
-    }).join('') + '</div><p class="ui-help">Pick any animation for this slide. Changing the slide type puts its usual animation back.' + (et === 'release' || et === 'idea' || et === 'season' ? ' This animation shows instead of a picture.' : '') + '</p>' +
+    }).join('') + '</div><p class="ui-help">Pick any animation for this slide. Choose None to show your picture or icon without movement, or just text if there is no picture. Changing the slide type puts its usual animation back.' + (et === 'release' || et === 'idea' || et === 'season' ? ' This animation shows instead of a picture.' : '') + '</p>' +
     '<h2>Text alignment</h2>' +
     '<div class="ui-aligns">' + [['label', 'Label'], ['heading', 'Heading'], ['text', 'Description']].map(function (a) {
       var curA = (s.align && s.align[a[0]]) || 'left';
