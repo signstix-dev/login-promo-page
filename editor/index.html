@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -798,6 +799,9 @@ function cardCSS() {
     '.kind-idea .media{flex-basis:178px}',
     '.kind-season .ic,.kind-season .pic,.kind-season .ph{display:none!important}',
     '.kind-season .media{flex-basis:175px}',
+    '.kind-plain .media{display:none}',
+    '.kind-plain .heading{margin-top:auto;font-size:30px}',
+    '.kind-plain .desc{margin-block:6px auto;font-size:13.5px;-webkit-line-clamp:6}',
     '.seas{left:-28px;right:-28px;top:0;bottom:0;overflow:hidden}',
     '.seas .glow{position:absolute;left:50%;top:50%;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;background:radial-gradient(circle,var(--g) 0%,transparent 70%)}',
     '.seas .p{position:absolute;left:var(--x);top:var(--y);margin:-14px 0 0 -14px}',
@@ -1295,6 +1299,7 @@ function ssSlide(s, i, base, editing) {
   MOTIF.season = SCENES[s.season] || SCENES.autumn;
   var kind = MOTIF[s.type] ? s.type : 'feature';
   if (!s._anim && !s.image && s.icon === 'lightbulb' && kind !== 'release') kind = 'idea';
+  if (s.anim === 'none') { MOTIF.plain = ''; kind = 'plain'; }   // text only, no animation or picture
   var arrow = '<span class="arr"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>';
   var btn = (has(s.button) || editing)
     ? (editing ? '<div class="btn">' : '<a class="btn" href="' + esc(s.link || '#') + '" target="_blank" rel="noopener">') +
@@ -1422,7 +1427,7 @@ function guessType(s) {
 }
 var FX_LIST = [{id: 'rocket', name: 'Rocket launch'}, {id: 'chart', name: 'Growing chart'}, {id: 'calendar', name: 'Scheduling'}, {id: 'videowall', name: 'Video wall'}, {id: 'pins', name: 'Map pins'}, {id: 'megaphone', name: 'Megaphone'}, {id: 'shield', name: 'Security shield'}, {id: 'sync', name: 'Live sync'}, {id: 'warning', name: 'Warning triangle'}, {id: 'widgets', name: 'Widgets'}, {id: 'fusion', name: 'SignFusion'}, {id: 'fplayer', name: 'FusionPlayer'}, {id: 'sense', name: 'SignSense'}, {id: 'email', name: 'Email'}];
 function sceneOK(id) { return SEASON_LIST.some(function (x) { return x.id === id; }) || FX_LIST.some(function (x) { return x.id === id; }); }
-var ANIM_BASIC = [{ id: 'feature', name: 'Orbiting stars' }, { id: 'learn', name: 'Lesson cards' }, { id: 'release', name: 'Update to screens' }, { id: 'idea', name: 'Light bulb' }];
+var ANIM_BASIC = [{ id: 'none', name: 'None (text only)' }, { id: 'feature', name: 'Orbiting stars' }, { id: 'learn', name: 'Lesson cards' }, { id: 'release', name: 'Update to screens' }, { id: 'idea', name: 'Light bulb' }];
 function animOK(a) { var m = String(a || '').split(':'); return ANIM_BASIC.some(function (x) { return x.id === a; }) || (m[0] === 'season' && sceneOK(m[1])); }
 function typeAnim(s) { return s.type === 'season' ? 'season:' + (s.season === 'fireworks' || s.season === 'sparklers' ? 'bonfire' : (s.season || 'autumn')) : s.type === 'autumn' ? 'season:autumn' : (s.type === 'feature' && !s.image && s.icon === 'lightbulb') ? 'idea' : s.type; }
 function effAnim(s) { return animOK(s.anim) ? s.anim : typeAnim(s); }
@@ -1896,7 +1901,7 @@ function renderSide() {
     '<div class="ui-types">' + TYPES.map(function (t) {
       return '<button type="button" data-type="' + t.id + '" class="' + (s.type === t.id ? 'on' : '') + '"><b>' + t.name + '</b><span>' + t.hint + '</span></button>';
     }).join('') + '</div>' +
-    '<div id="picBlock"' + (et === 'release' || et === 'idea' || et === 'season' ? ' hidden' : '') + '><h2>Picture</h2>' +
+    '<div id="picBlock"' + (et === 'release' || et === 'idea' || et === 'season' || et === 'none' ? ' hidden' : '') + '><h2>Picture</h2>' +
     '<div class="ui-seg"><button type="button" data-mode="icon" class="' + (mode === 'icon' ? 'on' : '') + '">Icon</button>' +
     '<button type="button" data-mode="art" class="' + (mode === 'art' ? 'on' : '') + '">Illustration</button>' +
     '<button type="button" data-mode="image" class="' + (mode === 'image' ? 'on' : '') + '">Your image</button></div>' +
