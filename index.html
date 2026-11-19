@@ -21,6 +21,7 @@ html,body{width:365px;height:446px;overflow:hidden;background:transparent;font-f
 .ic{position:relative;z-index:2;width:88px;height:88px;border-radius:24px;background:linear-gradient(140deg,var(--ta,var(--c1)),var(--tb,var(--c2)));display:grid;place-items:center;box-shadow:0 16px 30px -12px var(--tb,var(--c2))}
 .ic svg{width:50%;height:50%}
 .pic{position:relative;z-index:2;display:block;max-width:150px;max-height:100%;object-fit:contain;filter:drop-shadow(0 12px 18px rgba(0,36,62,.18))}
+img.pic{filter:none}
 .art{width:156px;height:117px;filter:drop-shadow(0 12px 18px rgba(0,36,62,.14))}
 .art svg{display:block;width:100%;height:100%}
 .kind-learn .art{width:104px;height:78px}
@@ -113,6 +114,11 @@ html,body{width:365px;height:446px;overflow:hidden;background:transparent;font-f
 .kind-idea .media{flex-basis:178px}
 .kind-season .ic,.kind-season .pic,.kind-season .ph{display:none!important}
 .kind-season .media{flex-basis:175px}
+.kind-plain .media{display:none}
+.kind-still .media,.kind-still .media *{animation:none!important}
+.kind-still .media{flex-grow:1}
+.kind-plain .heading{margin-top:auto;font-size:30px}
+.kind-plain .desc{margin-block:6px auto;font-size:13.5px;-webkit-line-clamp:6}
 .seas{left:-28px;right:-28px;top:0;bottom:0;overflow:hidden}
 .seas .glow{position:absolute;left:50%;top:50%;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;background:radial-gradient(circle,var(--g) 0%,transparent 70%)}
 .seas .p{position:absolute;left:var(--x);top:var(--y);margin:-14px 0 0 -14px}
@@ -578,6 +584,25 @@ html,body{width:365px;height:446px;overflow:hidden;background:transparent;font-f
         "text": "center"
       },
       "season": "elvesve"
+    },
+    {
+      "type": "feature",
+      "label": "TRust and security",
+      "title": "ISO 27001 *certified*",
+      "text": "Your screens, content and data are protected by an internationally recognised standard.",
+      "button": "Find out more",
+      "link": "https://www.signstix.com/security---compliance",
+      "image": "images/iso-27001-certified-mwns516n.jpg",
+      "icon": "star",
+      "hidden": false,
+      "colors": {
+        "button": "#0a364b",
+        "buttonText": "#ff5e00"
+      },
+      "anim": "none",
+      "from": "2026-11-20",
+      "until": "2026-11-30",
+      "align": {}
     },
     {
       "type": "feature",
@@ -1105,6 +1130,8 @@ function ssSlide(s, i, base, editing) {
   MOTIF.season = SCENES[s.season] || SCENES.autumn;
   var kind = MOTIF[s.type] ? s.type : 'feature';
   if (!s._anim && !s.image && s.icon === 'lightbulb' && kind !== 'release') kind = 'idea';
+  // no animation: show the picture still if there is one, otherwise text only
+  if (s.anim === 'none') { MOTIF.plain = ''; MOTIF.still = ''; kind = (s.image || ICONS[s.icon]) ? 'still' : 'plain'; }
   var arrow = '<span class="arr"><svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>';
   var btn = (has(s.button) || editing)
     ? (editing ? '<div class="btn">' : '<a class="btn" href="' + esc(s.link || '#') + '" target="_blank" rel="noopener">') +
